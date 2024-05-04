@@ -1,0 +1,11 @@
+.searchPanel {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    width: 100%;
+}
+
+.searchPanel *{
+    width: 50vw;
+    font-size:calc(12px + 2vw);
+}

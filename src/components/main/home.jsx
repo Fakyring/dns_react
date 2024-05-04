@@ -1,11 +1,12 @@
 import axios from 'axios'
 import {useEffect, useState} from "react";
 import EquipmentsList from "./equipmentslist";
+import {TextField} from "@mui/material";
 
 function Home() {
     const [eqs, setEqs] = useState();
     useEffect(() => {
-        axios.get("http://localhost:8000/api/equipments").then((equipments) => {
+        axios.get("http://west-pulling.gl.at.ply.gg:9130/api/equipments").then((equipments) => {
             setEqs(equipments.data.data)
         })
     }, []);
