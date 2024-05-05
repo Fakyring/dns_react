@@ -18,7 +18,7 @@ function Login() {
             return
         }
         const data = new FormData(event.currentTarget);
-        axios.post("http://west-pulling.gl.at.ply.gg:9130/api/login", {
+        axios.post("/rapi/api/login", {
             "email": email,
             "password": password
         }, {
