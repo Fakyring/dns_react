@@ -14,7 +14,7 @@ function EquipmentCard() {
     const [equipment, setEquipment] = useState();
     const params = useParams()
     useEffect(() => {
-        axios.get("/rapi/api/equipments/" + params.id).then((response) => {
+        axios.get("http://west-pulling.gl.at.ply.gg:9130/api/equipments/" + params.id).then((response) => {
             setEquipment(response.data.data)
         })
     }, []);
