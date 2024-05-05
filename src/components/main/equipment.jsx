@@ -1,7 +1,7 @@
 import React from "react";
 import '@mui/material'
 import {
-    Box,
+    Box, Button,
     Card,
     CardActionArea,
     CardHeader,
@@ -14,10 +14,10 @@ function EquipmentElement(props) {
         return ""
     let path = "/equipment/" + props.eq.id;
     return (
-        <Card>
-            <CardActionArea href={path}>
+        <Card className="card">
+            <CardActionArea href={path} draggable="false">
                 <CardHeader title={props.eq.name} style={{textAlign: "center"}}/>
-                <CardMedia component="img" height='210' image={props.eq.image}/>
+                <CardMedia component="img" height='210' draggable="false" image={props.eq.image}/>
                 <Typography>{props.eq.descr}</Typography>
                 <Box display="flex" gap={2} justifyContent="space-between" alignItems="center">
                     <Typography>

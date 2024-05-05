@@ -2,6 +2,8 @@ import axios from 'axios'
 import {useEffect, useState} from "react";
 import EquipmentsList from "./equipmentslist";
 import {TextField} from "@mui/material";
+import {useDispatch, useSelector} from "react-redux";
+import {changeStatus} from "../redux/userSlice";
 
 function Home() {
     const [eqs, setEqs] = useState();

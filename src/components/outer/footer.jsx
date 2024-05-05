@@ -12,11 +12,7 @@ function Footer() {
             <div className='media'><img src='https://upload.wikimedia.org/wikipedia/ru/2/2d/MIREA_Logo.svg'
                                         alt='N/A'/><a rel="noreferrer" target='_blank' href='https://mirea.ru'> </a>
             </div>
-            <div className='media'><img
-                src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2048px-Steam_icon_logo.svg.png'
-                alt='N/A'/><a rel="noreferrer" target='_blank' href='https://steamcommunity.com/id/fakyring/'> </a>
-            </div>
-
+            <div style={{position: "absolute", right: 0, bottom: 0}}>Семянников Н.С. ИКБО-02-21</div>
         </footer>
     )
 }

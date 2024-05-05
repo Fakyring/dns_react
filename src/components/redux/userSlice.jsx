@@ -1,19 +1,18 @@
 import {createSlice} from '@reduxjs/toolkit'
 
 export const userSlice = createSlice({
-    name: 'userActivities',
+    name: 'loggedUser',
     initialState: {
-        users: [],
-        currentUser: []
+        role: undefined
     },
     reducers: {
-        setCurrent: (state, user) => {
-            state.currentUser = user.payload
+        changeStatus: (state, role) => {
+            state.role = role.payload
         }
     },
 })
 
 // Action creators are generated for each case reducer function
-export const {addUser, setCurrent} = userSlice.actions
+export const {changeStatus} = userSlice.actions
 
 export default userSlice.reducer

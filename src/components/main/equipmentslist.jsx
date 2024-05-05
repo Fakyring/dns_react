@@ -12,8 +12,28 @@ function EquipmentsList(eqs) {
     return (
         <div>
             <div className="searchPanel">
-                <h1 style={{textAlign: "center"}}>Оборудование</h1>
-                <TextField style={{justifySelf: "center"}} onChange={handleSearch}></TextField>
+                <h1 style={{textAlign: "center", color: "white"}}>Оборудование</h1>
+                <TextField style={{justifySelf: "center"}} onChange={handleSearch}
+                           sx={{
+                               "& .MuiOutlinedInput-root": {
+                                   color: "#ffffff",
+                                   fontFamily: "Arial",
+                                   "&:hover .MuiOutlinedInput-notchedOutline": {
+                                       borderColor: "white"
+                                   },
+                                   "& .MuiOutlinedInput-notchedOutline": {
+                                       borderColor: "white",
+                                       borderWidth: "2px",
+                                   },
+                                   "&.Mui-focused": {
+                                       "& .MuiOutlinedInput-notchedOutline": {
+                                           borderColor: "#8709ff",
+                                           borderWidth: "3px",
+                                       },
+                                   },
+                               },
+                           }}
+                />
             </div>
             <Grid container gap={2} margin={2} direction="row" justify="flex-start" alignItems="flex-start">
                 {eqs.eqs.map(eq => {

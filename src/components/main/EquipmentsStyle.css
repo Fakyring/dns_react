@@ -5,7 +5,11 @@
     width: 100%;
 }
 
-.searchPanel *{
+.searchPanel * {
     width: 50vw;
-    font-size:calc(12px + 2vw);
+    font-size: calc(12px + 2vw);
+}
+
+.card * {
+    color: black !important;
 }
