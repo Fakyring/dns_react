@@ -37,7 +37,7 @@ function Register() {
         data.append('name', name)
         data.append('password', password)
         data.append('role', role)
-        axios.post("http://west-pulling.gl.at.ply.gg:9130/api/users", data, {
+        axios.post("rapi/api/users", data, {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
@@ -46,7 +46,7 @@ function Register() {
             if (response.status === 409)
                 alert("Такой пользователь уже есть")
             if (response.status === 201)
-                axios.post("http://west-pulling.gl.at.ply.gg:9130/api/login", {
+                axios.post("rapi/api/login", {
                     "email": email,
                     "password": password
                 }).then((loginResponse) => {
