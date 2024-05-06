@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import '@mui/material'
 import {
-    Box,
+    Box, Button,
     Card,
     CardHeader,
     CardMedia,
@@ -9,30 +9,68 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import {useParams} from "react-router-dom";
+import "./EquipmentStyle.css"
+import useGenerateRandomColor from "../useGenerateRandomColor";
+import invert from 'invert-color';
 
 function EquipmentCard() {
+    const r = document.documentElement;
+    const {color, generateColor} = useGenerateRandomColor();
     const [equipment, setEquipment] = useState();
     const params = useParams()
     useEffect(() => {
-        axios.get("http://west-pulling.gl.at.ply.gg:9130/api/equipments/" + params.id).then((response) => {
+        generateColor();
+        axios.get(process.env.REACT_APP_URL + "/api/equipments/" + params.id).then((response) => {
             setEquipment(response.data.data)
         })
     }, []);
     if (!equipment) return null;
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        if (equipment.count <= 0) {
+            alert("Товара больше нет")
+            return
+        }
+        axios.post(process.env.REACT_APP_URL + "/api/carts", {
+            "id_eq": equipment.id,
+            "count": 1
+        }, {
+            validateStatus: () => true,
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+        }).then((response) => {
+            if (response.status === 200 || response.status === 201)
+                generateColor();
+            else
+                alert("Товара больше нет")
+            axios.get(process.env.REACT_APP_URL + "/api/equipments/" + params.id).then((response) => {
+                setEquipment(response.data.data)
+            })
+        })
+    };
+
+    r.style.setProperty('--bgcolor', "#" + color);
+    r.style.setProperty('--color', invert(color));
     return (
-        <Card className="card">
-            <CardHeader title={equipment.name} style={{textAlign: "center"}}/>
-            <CardMedia component="img" height='210' draggable="false" image={equipment.image}/>
-            <Typography>{equipment.descr}</Typography>
-            <Box display="flex" gap={2} justifyContent="space-between" alignItems="center">
-                <Typography>
-                    Количество: {equipment.count}
-                </Typography>
-                <Typography>
-                    Цена: {equipment.price}$
-                </Typography>
-            </Box>
-        </Card>
+        <div className={"cardFlex"}>
+            <Card className="eqCard">
+                <CardHeader title={equipment.name} style={{textAlign: "center"}}/>
+                <CardMedia component="img" draggable="false" image={equipment.image}/>
+                <Typography className="descrCard">{equipment.descr}</Typography>
+                <Typography>{equipment.type}</Typography>
+                <Box display="flex" gap={2} justifyContent="space-between" alignItems="center">
+                    <Typography className="typography">
+                        Количество: {equipment.count}
+                    </Typography>
+                    <Typography className="typography">
+                        Цена: {equipment.price}$
+                    </Typography>
+                </Box>
+                <Button className="addToCart" onClick={handleSubmit}>Добавить в корзину</Button>
+            </Card>
+        </div>
     )
 }
 

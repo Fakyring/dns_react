@@ -1,4 +1,5 @@
 .searchPanel {
+    z-index: 1;
     display: flex;
     flex-flow: column;
     align-items: center;
@@ -7,9 +8,19 @@
 
 .searchPanel * {
     width: 50vw;
-    font-size: calc(12px + 2vw);
+    font-size: calc(12px + 1vw);
+}
+
+.card img {
+    max-width: 500px;
+    height: 300px !important;
 }
 
 .card * {
     color: black !important;
+}
+
+.descrMain {
+    min-width: 300px;
+    max-width: 300px;
 }

@@ -1,0 +1,46 @@
+:root {
+    --bgcolor: white;
+    --color: black;
+}
+
+.cardFlex {
+    margin-top: 50px;
+    width: 100vw;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.eqCard {
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    flex-flow: column;
+    background: var(--bgcolor) !important;
+}
+
+.eqCard img {
+    max-width: 500px;
+    height: 300px !important;
+}
+
+.typography {
+    padding: 0 10px 0 10px;
+}
+
+.descrCard {
+    margin-top: 5px;
+    max-width: 300px;
+    text-align: center;
+}
+
+.eqCard * {
+    color: var(--color) !important;
+}
+
+.addToCart {
+    margin-top: 5px !important;
+    color: #bd00bd !important;
+    background: #1a202c !important;
+}

@@ -1,5 +1,4 @@
-import {useSelector} from "react-redux";
-import {Link, redirect} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {Avatar, Box, Button, Container, CssBaseline, Grid, TextField, Typography} from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {useState} from "react";
@@ -17,8 +16,7 @@ function Login() {
             alert("Данные некорректны")
             return
         }
-        const data = new FormData(event.currentTarget);
-        axios.post("/west-pulling.gl.at.ply.gg:9130/api/login", {
+        axios.post(process.env.REACT_APP_URL + "/api/login", {
             "email": email,
             "password": password
         }, {

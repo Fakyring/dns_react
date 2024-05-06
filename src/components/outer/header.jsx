@@ -3,13 +3,13 @@ import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import axios from "axios";
 import {changeStatus} from "../redux/userSlice";
+import {Button} from "@mui/material";
 
 function Header(props) {
     const user = useSelector((state) => state.status)
     const dispatch = useDispatch()
-    let adminPanel = user.role ? <Link to='/admin'>Панель администратора</Link> : ""
     useEffect(() => {
-        axios.post("http://west-pulling.gl.at.ply.gg:9130/api/me", localStorage.getItem("token"), {
+        axios.post(process.env.REACT_APP_URL + "/api/me", localStorage.getItem("token"), {
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
@@ -20,7 +20,16 @@ function Header(props) {
                     dispatch(changeStatus(user.data.role))
         })
     }, []);
-    let notUser = user.role === undefined ? <Link to='/auth' state={{action: "login"}}>Войти</Link> : ""
+    function exit(){
+        axios.post(process.env.REACT_APP_URL + "/api/logout", localStorage.getItem("token"), {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+            validateStatus: () => true
+        })
+    }
+    let adminPanel = user.role ? <Link to='/admin'>Панель администратора</Link> : ""
+    let notUser = user.role === undefined ? <Link to='/auth' state={{action: "login"}}>Войти</Link> : <div className="rightHeader"><Link to='/cart'>Корзина</Link><Link to='/' onClick={exit}>Выйти</Link></div>
     return (
         <header>
             <Link to='/'><img src="/logo.png" alt="logo"/></Link>

@@ -1,5 +1,3 @@
-import {useEffect, useState} from "react";
-import axios from "axios";
 import {useSelector} from "react-redux";
 import {redirect, useLocation} from "react-router-dom";
 import Login from "./login";

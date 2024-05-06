@@ -1,6 +1,5 @@
-import {Link} from "react-router-dom";
+import React, {useEffect, useState} from "react";
 import {
-    Avatar,
     Box,
     Button,
     Checkbox,
@@ -11,97 +10,102 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import {useState} from "react";
-import "./AuthStyle.css"
 import axios from "axios";
+import "./AdminStyle.css"
 
-function Register() {
-    const [email, setEmail] = useState("");
-    const [emailError, setEmailError] = useState(false);
-    const [password, setPassword] = useState("");
-    const [passwordError, setPasswordError] = useState(false);
+function AdminPanel() {
     const [name, setName] = useState("");
+    const [type, setType] = useState(1);
+    const [count, setCount] = useState(1);
+    const [price, setPrice] = useState(1);
+    const [image, setImage] = useState();
+    const [descr, setDescr] = useState("");
     const [nameError, setNameError] = useState(false);
-    const [confPassword, setConfPassword] = useState("");
-    const [confPasswordError, setConfPasswordError] = useState(false);
-    const [role, setRole] = useState(0);
+    const [countError, setCountError] = useState(false);
+    const [priceError, setPriceError] = useState(false);
+    const [descrError, setDescrError] = useState(false);
+    const [typeLabel, setTypeLabel] = useState("Бытовая техника");
+    const [imageUrl, setImageUrl] = useState(null);
     const handleSubmit = (event) => {
         event.preventDefault();
-        if (!event.target.checkValidity() || emailError || passwordError || nameError || confPasswordError) {
+        if (!event.target.checkValidity() || nameError || countError || priceError || descrError) {
             alert("Данные некорректны")
             return
         }
         const data = new FormData();
-        data.append('email', email)
         data.append('name', name)
-        data.append('password', password)
-        data.append('role', role)
-        axios.post(process.env.REACT_APP_URL + "/api/users", data, {
+        data.append('type', type)
+        data.append('count', count)
+        data.append('price', price)
+        data.append('image', image)
+        data.append('descr', descr)
+        axios.post(process.env.REACT_APP_URL + "/api/equipments", data, {
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
             validateStatus: () => true
         }).then((response) => {
-            if (response.status === 409)
-                alert("Такой пользователь уже есть")
-            if (response.status === 201)
-                axios.post(process.env.REACT_APP_URL + "/api/login", {
-                    "email": email,
-                    "password": password
-                }).then((loginResponse) => {
-                    localStorage.setItem("token", loginResponse.data.access_token)
-                    window.location.href = "/";
-                })
+            window.location.href = "/admin";
         })
-    };
-
-    const handleEmailChange = e => {
-        setEmail(e.target.value);
-        if (!/^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$/.test(e.target.value)) {
-            setEmailError("Некорректная почта");
-        } else {
-            setEmailError(false);
-        }
-    };
-
-    const handlePasswordChange = e => {
-        setPassword(e.target.value)
-        if (e.target.value.length < 8) {
-            setPasswordError("Пароль должен быть минимум 8 символов в длину")
-        } else if (e.target.value.length > 20) {
-            setPasswordError("Пароль должен быть не больше 20 символов")
-        } else if (confPassword !== password) {
-            setConfPasswordError("Пароли должны совпадать")
-        } else {
-            setPasswordError(false)
-        }
     };
     const handleNameChange = e => {
         setName(e.target.value);
-        if (e.target.value.length < 4) {
-            setNameError("Имя должно быть минимум 4 символов в длину");
-        } else if (e.target.value.length > 30) {
-            setNameError("Имя должно быть не больше 30 символов");
+        if (e.target.value.length < 10) {
+            setNameError("Имя должно быть минимум 10 символов в длину");
+        } else if (e.target.value.length > 50) {
+            setNameError("Имя должно быть не больше 50 символов");
         } else {
             setNameError(false);
         }
     };
-    const handleConfPasswordChange = e => {
-        setConfPassword(e.target.value);
-        if (confPassword !== password) {
-            setConfPasswordError("Пароли должны совпадать");
+    const handleTypeChange = e => {
+        setType((e.target.checked === true ? 1 : 0));
+        if (e.target.checked) {
+            setTypeLabel("Электронная техника")
+        } else
+            setTypeLabel("Бытовая техника")
+    };
+    const handleCountChange = e => {
+        setCount(e.target.value);
+        if (typeof Number(e.target.value) === "NaN" || e.target.value < 1 || e.target.value > 999999) {
+            setCountError("Некорректный тип или слишком большое/отрицательное число");
         } else {
-            setConfPasswordError(false);
+            setCountError(false);
+        }
+    };
+    const handleDescrChange = e => {
+        setDescr(e.target.value);
+        if (e.target.value.length > 500) {
+            setDescrError("Символов должно быть не больше 200");
+        } else {
+            setDescrError(false);
+        }
+    };
+    const handleFileUpload = e => {
+        setImage(e.target.files[0]);
+        if (e.target.value.length > 500) {
+            setDescrError("Символов должно быть не больше 200");
+        } else {
+            setDescrError(false);
         }
     };
 
-    const handleRoleChange = e => {
-        setRole((e.target.checked === true ? 1 : 0));
+    useEffect(() => {
+        if (image) {
+            setImageUrl(URL.createObjectURL(image));
+            console.log(imageUrl)
+        }
+    }, [image])
+    const handlePriceChange = e => {
+        setPrice(Number(e.target.value).toFixed(2));
+        if (typeof Number(e.target.value) === "NaN" || e.target.value < 1 || e.target.value > 9999999) {
+            setPriceError("Некорректный тип или слишком большое/отрицательное число");
+        } else {
+            setPriceError(false);
+        }
     };
-
     return (
-        <Container component="main" maxWidth="xs" className={"authCard"}>
+        <Container component="main" maxWidth="xs" className={"adminmain"}>
             <CssBaseline/>
             <Box
                 sx={{
@@ -111,59 +115,25 @@ function Register() {
                     alignItems: 'center',
                 }}
             >
-                <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-                    <LockOutlinedIcon/>
-                </Avatar>
                 <Typography component="h1" variant="h5" style={{color: "white"}}>
-                    Регистрация
+                    Добавление оборудования
                 </Typography>
-                <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
-                    <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Почта"
-                        name="email"
-                        autoFocus
-                        onChange={handleEmailChange}
-                        error={emailError}
-                        helperText={emailError}
-                        variant="outlined"
-                        color="info"
-                        InputLabelProps={{className: "textfield__label"}}
-                        sx={{
-                            "& .MuiOutlinedInput-root": {
-                                color: "#ffffff",
-                                fontFamily: "Arial",
-                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                    borderColor: "white"
-                                },
-                                "& .MuiOutlinedInput-notchedOutline": {
-                                    borderColor: "white",
-                                    borderWidth: "2px",
-                                },
-                                "&.Mui-focused": {
-                                    "& .MuiOutlinedInput-notchedOutline": {
-                                        borderColor: "#8709ff",
-                                        borderWidth: "3px",
-                                    },
-                                },
-                            },
-                        }}
-                    />
+                <Box mt={2} className={"adminImage"} textAlign="center">
+                    <img style={{padding: "0"}} src={imageUrl} height="100px"/>
+                </Box>
+                <Box component="form" onSubmit={handleSubmit} validate sx={{mt: 1}}>
                     <TextField
                         margin="normal"
                         required
                         fullWidth
                         name="name"
-                        label="Имя"
+                        label="Название"
                         type="text"
                         id="name"
                         onChange={handleNameChange}
                         error={nameError}
                         helperText={nameError}
-                        inputProps={{maxLength: 20}}
+                        inputProps={{maxLength: 50}}
                         InputLabelProps={{className: "textfield__label"}}
                         sx={{
                             "& .MuiOutlinedInput-root": {
@@ -189,14 +159,15 @@ function Register() {
                         margin="normal"
                         required
                         fullWidth
-                        name="password"
-                        label="Пароль"
-                        type="password"
-                        id="password"
-                        onChange={handlePasswordChange}
-                        error={passwordError}
-                        helperText={passwordError}
-                        inputProps={{maxLength: 20}}
+                        name="count"
+                        label="Количество"
+                        type="number"
+                        id="count"
+                        onChange={handleCountChange}
+                        error={countError}
+                        helperText={countError}
+                        defaultValue={1}
+                        inputProps={{max: 999999, min: 1}}
                         InputLabelProps={{className: "textfield__label"}}
                         sx={{
                             "& .MuiOutlinedInput-root": {
@@ -222,14 +193,50 @@ function Register() {
                         margin="normal"
                         required
                         fullWidth
-                        name="confPassword"
-                        label="Повтор пароля"
-                        type="password"
-                        id="confPassword"
-                        onChange={handleConfPasswordChange}
-                        error={confPasswordError}
-                        helperText={confPasswordError}
-                        inputProps={{maxLength: 20}}
+                        name="price"
+                        label="Цена"
+                        type="number"
+                        id="price"
+                        onChange={handlePriceChange}
+                        error={priceError}
+                        helperText={priceError}
+                        defaultValue={1}
+                        inputProps={{max: 9999999, min: 1}}
+                        InputLabelProps={{className: "textfield__label"}}
+                        sx={{
+                            "& .MuiOutlinedInput-root": {
+                                color: "#ffffff",
+                                fontFamily: "Arial",
+                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                    borderColor: "white"
+                                },
+                                "& .MuiOutlinedInput-notchedOutline": {
+                                    borderColor: "white",
+                                    borderWidth: "2px",
+                                },
+                                "&.Mui-focused": {
+                                    "& .MuiOutlinedInput-notchedOutline": {
+                                        borderColor: "#8709ff",
+                                        borderWidth: "3px",
+                                    },
+                                },
+                            },
+                        }}
+                    />
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="descr"
+                        label="Описание"
+                        type="text"
+                        id="descr"
+                        multiline
+                        rows={10}
+                        onChange={handleDescrChange}
+                        error={descrError}
+                        helperText={descrError}
+                        inputProps={{maxLength: 500}}
                         InputLabelProps={{className: "textfield__label"}}
                         sx={{
                             "& .MuiOutlinedInput-root": {
@@ -252,30 +259,37 @@ function Register() {
                         }}
                     />
                     <FormControlLabel
+                        id={"typeChecker"}
                         control={
-                            <Checkbox onChange={handleRoleChange} name="role"/>
+                            <Checkbox onChange={handleTypeChange} name="role"/>
                         }
-                        label="Роль"
+                        label={<span style={{color: "white"}}>{typeLabel}</span>}
                     />
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        component="label"
+                    >
+                        Загрузить фотографию
+                        <input
+                            accept="image/*"
+                            type="file"
+                            hidden
+                            onChange={handleFileUpload}
+                        />
+                    </Button>
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
                         sx={{mt: 3, mb: 2}}
                     >
-                        Авторизоваться
+                        Добавить
                     </Button>
-                    <Grid container>
-                        <Grid item>
-                            <Link to={"/auth"} state={{action: "login"}} variant="body2">
-                                {"Есть аккаунт? Войти"}
-                            </Link>
-                        </Grid>
-                    </Grid>
                 </Box>
             </Box>
         </Container>
-    )
+    );
 }
 
-export default Register;
+export default AdminPanel;

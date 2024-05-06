@@ -1,11 +1,11 @@
 import React from "react";
 import '@mui/material'
 import {
-    Box, Button,
+    Box,
     Card,
     CardActionArea,
     CardHeader,
-    CardMedia, ListItem, Stack,
+    CardMedia,
     Typography
 } from "@mui/material";
 
@@ -18,7 +18,8 @@ function EquipmentElement(props) {
             <CardActionArea href={path} draggable="false">
                 <CardHeader title={props.eq.name} style={{textAlign: "center"}}/>
                 <CardMedia component="img" height='210' draggable="false" image={props.eq.image}/>
-                <Typography>{props.eq.descr}</Typography>
+                <Typography className="descrMain">{props.eq.descr}</Typography>
+                <Typography>{props.eq.type}</Typography>
                 <Box display="flex" gap={2} justifyContent="space-between" alignItems="center">
                     <Typography>
                         Количество: {props.eq.count}
