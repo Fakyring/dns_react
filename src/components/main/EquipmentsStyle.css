@@ -16,6 +16,10 @@
     height: 300px !important;
 }
 
+.eqsList {
+    max-height: 60vh;
+}
+
 .card * {
     color: black !important;
 }

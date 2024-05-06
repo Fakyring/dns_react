@@ -23,9 +23,8 @@ header {
 .main {
     margin-top: 50px;
     width: 95vw;
-    height: 80vh;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    height: calc(100vh - 50px);
+    overflow: hidden;
 }
 
 header img {
@@ -62,7 +61,6 @@ footer .media {
 footer .media img {
     width: 50px;
     position: absolute;
-    bottom: 25px;
     border-radius: 100%;
 }
 

@@ -35,7 +35,7 @@ function EquipmentsList(eqs) {
                            }}
                 />
             </div>
-            <Grid container gap={2} margin={2} direction="row" justify="flex-start" alignItems="flex-start">
+            <Grid className={"eqsList"} container gap={2} margin={2} direction="row" justify="flex-start" alignItems="flex-start">
                 {eqs.eqs.map(eq => {
                     return (
                         <EquipmentElement eq={eq} filterName={eqName}/>
