@@ -1,4 +1,4 @@
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import axios from "axios";
@@ -8,6 +8,7 @@ import {Button} from "@mui/material";
 function Header(props) {
     const user = useSelector((state) => state.status)
     const dispatch = useDispatch()
+    const history = useNavigate()
     useEffect(() => {
         axios.post(process.env.REACT_APP_URL + "/api/me", localStorage.getItem("token"), {
             headers: {
@@ -19,13 +20,15 @@ function Header(props) {
                 if (user.data)
                     dispatch(changeStatus(user.data.role))
         })
-    }, []);
+    }, [user]);
     function exit(){
         axios.post(process.env.REACT_APP_URL + "/api/logout", localStorage.getItem("token"), {
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
             validateStatus: () => true
+        }).then(() => {
+            dispatch(changeStatus(undefined))
         })
     }
     let adminPanel = user.role ? <Link to='/admin'>Панель администратора</Link> : ""

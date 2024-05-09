@@ -3,12 +3,11 @@ import EquipmentElement from "./equipment";
 import {Grid, TextField} from "@mui/material";
 import "./EquipmentsStyle.css";
 
-function EquipmentsList(eqs) {
+function EquipmentsList(props) {
     const [eqName, setEqName] = useState();
     const handleSearch = (e) => {
         setEqName(e.target.value);
     };
-
     return (
         <div>
             <div className="searchPanel">
@@ -36,9 +35,9 @@ function EquipmentsList(eqs) {
                 />
             </div>
             <Grid className={"eqsList"} container gap={2} margin={2} direction="row" justify="flex-start" alignItems="flex-start">
-                {eqs.eqs.map(eq => {
+                {props.eqs.map(eq => {
                     return (
-                        <EquipmentElement eq={eq} filterName={eqName}/>
+                        <EquipmentElement eq={eq} filterName={eqName} eqs={props.eqs} setEqs={props.setEqs}/>
                     )
                 })}
             </Grid>

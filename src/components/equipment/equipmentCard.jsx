@@ -12,12 +12,14 @@ import {useParams} from "react-router-dom";
 import "./EquipmentStyle.css"
 import useGenerateRandomColor from "../useGenerateRandomColor";
 import invert from 'invert-color';
+import {useSelector} from "react-redux";
 
 function EquipmentCard() {
-    const r = document.documentElement;
-    const {color, generateColor} = useGenerateRandomColor();
-    const [equipment, setEquipment] = useState();
+    const r = document.documentElement
+    const {color, generateColor} = useGenerateRandomColor()
+    const [equipment, setEquipment] = useState()
     const params = useParams()
+    const user = useSelector((state) => state.status)
     useEffect(() => {
         generateColor();
         axios.get(process.env.REACT_APP_URL + "/api/equipments/" + params.id).then((response) => {
@@ -25,7 +27,6 @@ function EquipmentCard() {
         })
     }, []);
     if (!equipment) return null;
-
     const handleSubmit = (event) => {
         event.preventDefault();
         if (equipment.count <= 0) {
@@ -53,6 +54,7 @@ function EquipmentCard() {
 
     r.style.setProperty('--bgcolor', "#" + color);
     r.style.setProperty('--color', invert(color));
+    let addingToCart = user.role === undefined ? "" : <Button className="addToCart" onClick={handleSubmit}>Добавить в корзину</Button>
     return (
         <div className={"cardFlex"}>
             <Card className="eqCard">
@@ -68,7 +70,7 @@ function EquipmentCard() {
                         Цена: {equipment.price}$
                     </Typography>
                 </Box>
-                <Button className="addToCart" onClick={handleSubmit}>Добавить в корзину</Button>
+                {addingToCart}
             </Card>
         </div>
     )

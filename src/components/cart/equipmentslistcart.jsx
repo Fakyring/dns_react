@@ -9,7 +9,7 @@ function EquipmentsListCart(props) {
     return (
         <div>
             <h1 style={{textAlign: "center", color: "white"}}>Корзина</h1>
-            <Grid container gap={2} margin={2} direction="row" justify="flex-start" alignItems="flex-start">
+            <Grid className={"eqsList"} container gap={2} margin={2} direction="row" justify="flex-start" alignItems="flex-start">
                 {props.eqs.map(eq => {
                     totalCount += eq.count
                     totalPrice += eq.count * eq.price

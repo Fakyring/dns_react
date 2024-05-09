@@ -11,6 +11,10 @@
     font-size: calc(12px + 1vw);
 }
 
+.card {
+    position: relative;
+}
+
 .card img {
     max-width: 500px;
     height: 300px !important;
@@ -28,4 +32,13 @@
 .descrMain {
     min-width: 300px;
     max-width: 300px;
+}
+
+.deleteButton {
+    position: absolute !important;
+    right: 0;
+    padding: 0 !important;
+    min-width: 24px !important;
+    width: 24px !important;
+    z-index: 1 !important;
 }

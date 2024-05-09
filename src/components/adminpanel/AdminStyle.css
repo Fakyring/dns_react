@@ -2,7 +2,7 @@
     color: cornflowerblue !important;
 }
 
-.adminImage{
+.adminImage {
     position: absolute !important;
     left: calc(50vw - 325px);
     top: calc(20vh - 50px);

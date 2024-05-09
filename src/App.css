@@ -25,6 +25,7 @@ header {
     width: 95vw;
     height: calc(100vh - 50px);
     overflow: hidden;
+    z-index: 10 !important;
 }
 
 header img {
@@ -51,6 +52,7 @@ footer {
     left: 10px;
     flex-direction: column;
     gap: 20px;
+    z-index: 0;
 }
 
 footer .media {
@@ -79,4 +81,10 @@ a:hover {
 
 a:visited, a {
     color: white;
+}
+
+@media (max-height: 900px) {
+    footer {
+        flex-flow: row;
+    }
 }

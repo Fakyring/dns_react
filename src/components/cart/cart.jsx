@@ -27,10 +27,6 @@ function Cart() {
     return (
         <div className="equipmentscart">
             <EquipmentsListCart eqs={eqs}/>
-            {/*<div className={"centeredCart"}>*/}
-            {/*    <Button>Купить всё</Button>*/}
-            {/*    <Button>Удалить всё</Button>*/}
-            {/*</div>*/}
         </div>
     )
 }

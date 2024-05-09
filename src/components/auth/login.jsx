@@ -1,15 +1,20 @@
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {Avatar, Box, Button, Container, CssBaseline, Grid, TextField, Typography} from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {useState} from "react";
 import "./AuthStyle.css"
 import axios from "axios";
+import {changeStatus} from "../redux/userSlice";
+import {useDispatch, useSelector} from "react-redux";
 
 function Login() {
+    const user = useSelector((state) => state.status)
+    const dispatch = useDispatch()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
+    const history = useNavigate()
     const handleSubmit = (event) => {
         event.preventDefault();
         if (!event.target.checkValidity() || emailError || passwordError) {
@@ -24,7 +29,8 @@ function Login() {
         }).then((loginResponse) => {
             if (loginResponse.status === 200) {
                 localStorage.setItem("token", loginResponse.data.access_token)
-                window.location.href = "/";
+                dispatch(changeStatus(0))
+                history("/")
             } else
                 alert("Неправильные данные")
         })

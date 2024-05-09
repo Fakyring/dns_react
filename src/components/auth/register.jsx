@@ -1,4 +1,4 @@
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {
     Avatar,
     Box,
@@ -26,6 +26,7 @@ function Register() {
     const [confPassword, setConfPassword] = useState("");
     const [confPasswordError, setConfPasswordError] = useState(false);
     const [role, setRole] = useState(0);
+    const history = useNavigate()
     const handleSubmit = (event) => {
         event.preventDefault();
         if (!event.target.checkValidity() || emailError || passwordError || nameError || confPasswordError) {
@@ -51,7 +52,7 @@ function Register() {
                     "password": password
                 }).then((loginResponse) => {
                     localStorage.setItem("token", loginResponse.data.access_token)
-                    window.location.href = "/";
+                    history("/");
                 })
         })
     };

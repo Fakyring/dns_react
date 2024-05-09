@@ -10,8 +10,10 @@ import {
 } from "@mui/material";
 import "./CartStyle.css";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 function EquipmentElementCart(props) {
+    const history = useNavigate()
     function buyCart(action) {
         axios.delete(process.env.REACT_APP_URL + "/api/carts/" + props.eq.id, {
             headers: {
@@ -21,7 +23,7 @@ function EquipmentElementCart(props) {
                 action: action
             }
         }).then((equipments) => {
-            window.location.href = "/cart"
+            history("/cart")
         })
     }
 

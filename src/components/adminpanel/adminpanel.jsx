@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import "./AdminStyle.css"
+import {useNavigate} from "react-router-dom";
 
 function AdminPanel() {
     const [name, setName] = useState("");
@@ -26,6 +27,7 @@ function AdminPanel() {
     const [descrError, setDescrError] = useState(false);
     const [typeLabel, setTypeLabel] = useState("Бытовая техника");
     const [imageUrl, setImageUrl] = useState(null);
+    const history = useNavigate()
     const handleSubmit = (event) => {
         event.preventDefault();
         if (!event.target.checkValidity() || nameError || countError || priceError || descrError) {
@@ -45,7 +47,7 @@ function AdminPanel() {
             },
             validateStatus: () => true
         }).then((response) => {
-            window.location.href = "/admin";
+            history("/")
         })
     };
     const handleNameChange = e => {
@@ -93,7 +95,6 @@ function AdminPanel() {
     useEffect(() => {
         if (image) {
             setImageUrl(URL.createObjectURL(image));
-            console.log(imageUrl)
         }
     }, [image])
     const handlePriceChange = e => {
