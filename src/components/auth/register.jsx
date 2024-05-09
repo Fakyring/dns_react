@@ -15,8 +15,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {useState} from "react";
 import "./AuthStyle.css"
 import axios from "axios";
+import {changeStatus} from "../redux/userSlice";
+import {useDispatch} from "react-redux";
 
 function Register() {
+    const dispatch = useDispatch()
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState(false);
     const [password, setPassword] = useState("");
@@ -53,6 +56,7 @@ function Register() {
                     "password": password
                 }).then((loginResponse) => {
                     localStorage.setItem("token", loginResponse.data.access_token)
+                    dispatch(changeStatus(0))
                     history("/");
                 })
         })
@@ -69,9 +73,7 @@ function Register() {
 
     const handlePasswordChange = e => {
         setPassword(e.target.value)
-        console.log(e.target.value.length < 8, passwordError)
         if (e.target.value.length < 8) {
-            console.log("8")
             setPasswordError("Пароль должен быть минимум 8 символов в длину")
         } else if (e.target.value.length > 20) {
             setPasswordError("Пароль должен быть не больше 20 символов")
@@ -96,7 +98,6 @@ function Register() {
     };
     const handleConfPasswordChange = e => {
         setConfPassword(e.target.value);
-        console.log(e.target.value !== password)
         if (e.target.value !== password) {
             setConfPasswordError("Пароли должны совпадать");
         } else {

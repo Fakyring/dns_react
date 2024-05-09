@@ -8,7 +8,6 @@ import {changeStatus} from "../redux/userSlice";
 import {useDispatch, useSelector} from "react-redux";
 
 function Login() {
-    const user = useSelector((state) => state.status)
     const dispatch = useDispatch()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
