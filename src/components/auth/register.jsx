@@ -20,13 +20,14 @@ function Register() {
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState(false);
     const [password, setPassword] = useState("");
-    const [passwordError, setPasswordError] = useState(false);
+    const [passwordError, setPasswordError] = useState("");
     const [name, setName] = useState("");
     const [nameError, setNameError] = useState(false);
     const [confPassword, setConfPassword] = useState("");
     const [confPasswordError, setConfPasswordError] = useState(false);
     const [role, setRole] = useState(0);
     const history = useNavigate()
+
     const handleSubmit = (event) => {
         event.preventDefault();
         if (!event.target.checkValidity() || emailError || passwordError || nameError || confPasswordError) {
@@ -68,14 +69,19 @@ function Register() {
 
     const handlePasswordChange = e => {
         setPassword(e.target.value)
+        console.log(e.target.value.length < 8, passwordError)
         if (e.target.value.length < 8) {
+            console.log("8")
             setPasswordError("Пароль должен быть минимум 8 символов в длину")
         } else if (e.target.value.length > 20) {
             setPasswordError("Пароль должен быть не больше 20 символов")
-        } else if (confPassword !== password) {
-            setConfPasswordError("Пароли должны совпадать")
         } else {
             setPasswordError(false)
+        }
+        if (confPassword !== e.target.value) {
+            setConfPasswordError("Пароли должны совпадать")
+        } else {
+            setConfPasswordError(false)
         }
     };
     const handleNameChange = e => {
@@ -90,7 +96,8 @@ function Register() {
     };
     const handleConfPasswordChange = e => {
         setConfPassword(e.target.value);
-        if (confPassword !== password) {
+        console.log(e.target.value !== password)
+        if (e.target.value !== password) {
             setConfPasswordError("Пароли должны совпадать");
         } else {
             setConfPasswordError(false);
@@ -130,6 +137,7 @@ function Register() {
                         onChange={handleEmailChange}
                         error={emailError}
                         helperText={emailError}
+                        autoComplete='off'
                         variant="outlined"
                         color="info"
                         InputLabelProps={{className: "textfield__label"}}
@@ -162,6 +170,7 @@ function Register() {
                         type="text"
                         id="name"
                         onChange={handleNameChange}
+                        autoComplete='off'
                         error={nameError}
                         helperText={nameError}
                         inputProps={{maxLength: 20}}
@@ -197,6 +206,7 @@ function Register() {
                         onChange={handlePasswordChange}
                         error={passwordError}
                         helperText={passwordError}
+                        autoComplete='off'
                         inputProps={{maxLength: 20}}
                         InputLabelProps={{className: "textfield__label"}}
                         sx={{
