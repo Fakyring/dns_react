@@ -1,6 +1,7 @@
 import React from "react";
 import '@mui/material'
 import ClearIcon from '@mui/icons-material/Clear';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 import {
     Box, Button,
     Card,
@@ -11,11 +12,13 @@ import {
 } from "@mui/material";
 import {useSelector} from "react-redux";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 function EquipmentElement(props) {
+    const history = useNavigate()
     const user = useSelector((state) => state.status)
+
     function deleteEq(id) {
-        console.log(id)
         axios.delete(process.env.REACT_APP_URL + "/api/equipments/" + id, {
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -24,14 +27,22 @@ function EquipmentElement(props) {
             props.setEqs(props.eqs.filter((item) => item.id !== id))
         })
     }
+
     if (props.filterName && !props.eq.name.toLowerCase().includes(props.filterName.toLowerCase())) {
         return ""
     }
     let path = "/equipment/" + props.eq.id;
-    let deleteBut = user.role === 1 ?
-        <Button className={"deleteButton"} onClick={() => deleteEq(props.eq.id)}><ClearIcon></ClearIcon></Button> : ""
+    let deleteBut = ""
+    let updateBut = ""
+    if (user.role === 1) {
+        deleteBut =
+            <Button className={"deleteButton"} onClick={() => deleteEq(props.eq.id)}><ClearIcon></ClearIcon></Button>
+        updateBut =
+            <Button className={"updateButton"} onClick={() => history("/admin/" + props.eq.id)}><AutorenewIcon></AutorenewIcon></Button>
+    }
     return (
         <Card className="card" id={"idEq_" + props.eq.id}>
+            {updateBut}
             {deleteBut}
             <CardActionArea href={path} draggable="false">
                 <CardHeader title={props.eq.name} style={{textAlign: "center"}}/>

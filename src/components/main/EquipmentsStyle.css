@@ -34,11 +34,15 @@
     max-width: 300px;
 }
 
-.deleteButton {
+.deleteButton, .updateButton {
     position: absolute !important;
     right: 0;
     padding: 0 !important;
     min-width: 24px !important;
     width: 24px !important;
     z-index: 1 !important;
+}
+
+.updateButton{
+    left: 0;
 }

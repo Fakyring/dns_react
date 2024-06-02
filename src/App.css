@@ -6,10 +6,11 @@
     justify-content: center;
     width: fit-content;
     min-width: 100vw;
+    position: relative;
 }
 
 header {
-    z-index: 0;
+    z-index: 100;
     display: flex;
     padding: 0 10px 0 10px;
     justify-content: space-between;

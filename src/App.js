@@ -22,6 +22,7 @@ function App() {
                     <Route path='/equipment/:id' element={<EquipmentCard/>}></Route>
                     <Route path='/cart' element={user.role !== undefined ? <Cart/> : <Home/>}></Route>
                     <Route path='/admin' element={user.role === 1 ? <AdminPanel/> : <Home/>}></Route>
+                    <Route path='/admin/:id' element={user.role === 1 ? <AdminPanel/> : <Home/>}></Route>
                 </Routes>
             </div>
             <Footer/>

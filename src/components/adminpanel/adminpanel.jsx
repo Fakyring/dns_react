@@ -12,14 +12,14 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import "./AdminStyle.css"
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 
 function AdminPanel() {
     const [name, setName] = useState("");
-    const [type, setType] = useState(1);
+    const [type, setType] = useState(2);
     const [count, setCount] = useState(1);
     const [price, setPrice] = useState(1);
-    const [image, setImage] = useState();
+    const [image, setImage] = useState(false);
     const [descr, setDescr] = useState("");
     const [nameError, setNameError] = useState(false);
     const [countError, setCountError] = useState(false);
@@ -28,9 +28,10 @@ function AdminPanel() {
     const [typeLabel, setTypeLabel] = useState("Бытовая техника");
     const [imageUrl, setImageUrl] = useState(null);
     const history = useNavigate()
+    const params = useParams()
     const handleSubmit = (event) => {
         event.preventDefault();
-        if (!event.target.checkValidity() || nameError || countError || priceError || descrError) {
+        if (!event.target.checkValidity() || nameError || countError || priceError || descrError || params.id ? "" : !image) {
             alert("Данные некорректны")
             return
         }
@@ -41,7 +42,9 @@ function AdminPanel() {
         data.append('price', price)
         data.append('image', image)
         data.append('descr', descr)
-        axios.post(process.env.REACT_APP_URL + "/api/equipments", data, {
+        if (params.id)
+            data.append('_method', 'PUT')
+        axios.post(process.env.REACT_APP_URL + "/api/equipments" + (params.id ? "/" + params.id : ""), data, {
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
@@ -61,8 +64,8 @@ function AdminPanel() {
         }
     };
     const handleTypeChange = e => {
-        setType((e.target.checked === true ? 1 : 0));
-        if (e.target.checked) {
+        setType(!isNaN(e) ? e : e.target.checked === true ? 1 : 2);
+        if (!isNaN(e) ? e === 1 : e.target.checked) {
             setTypeLabel("Электронная техника")
         } else
             setTypeLabel("Бытовая техника")
@@ -85,11 +88,6 @@ function AdminPanel() {
     };
     const handleFileUpload = e => {
         setImage(e.target.files[0]);
-        if (e.target.value.length > 500) {
-            setDescrError("Символов должно быть не больше 200");
-        } else {
-            setDescrError(false);
-        }
     };
 
     useEffect(() => {
@@ -97,6 +95,7 @@ function AdminPanel() {
             setImageUrl(URL.createObjectURL(image));
         }
     }, [image])
+
     const handlePriceChange = e => {
         setPrice(Number(e.target.value).toFixed(2));
         if (typeof Number(e.target.value) === "NaN" || e.target.value < 1 || e.target.value > 9999999) {
@@ -105,6 +104,23 @@ function AdminPanel() {
             setPriceError(false);
         }
     };
+    const [eq, setEq] = useState([]);
+    useEffect(() => {
+        if (params.id)
+            axios.get(process.env.REACT_APP_URL + "/api/equipments/" + params.id).then((equipment) => {
+                setEq(equipment.data.data)
+                setName(equipment.data.data.name)
+                setType(equipment.data.data.id_type)
+                handleTypeChange(equipment.data.data.id_type)
+                setCount(equipment.data.data.count)
+                setDescr(equipment.data.data.descr)
+                setPrice(equipment.data.data.price)
+            })
+    }, [params.id]);
+    let titleText = "Добавление оборудования"
+    if (params.id) {
+        titleText = "Изменение оборудования"
+    }
     return (
         <Container component="main" maxWidth="xs" className={"adminmain"}>
             <CssBaseline/>
@@ -117,10 +133,10 @@ function AdminPanel() {
                 }}
             >
                 <Typography component="h1" variant="h5" style={{color: "white"}}>
-                    Добавление оборудования
+                    {titleText}
                 </Typography>
                 <Box mt={2} className={"adminImage"} textAlign="center">
-                    <img style={{padding: "0"}} src={imageUrl} height="100px"/>
+                    <img style={{padding: "0"}} src={eq.image && !imageUrl ? eq.image : imageUrl} height="100px"/>
                 </Box>
                 <Box component="form" onSubmit={handleSubmit} validate sx={{mt: 1}}>
                     <TextField
@@ -135,6 +151,7 @@ function AdminPanel() {
                         error={nameError}
                         helperText={nameError}
                         inputProps={{maxLength: 50}}
+                        value={name}
                         InputLabelProps={{className: "textfield__label"}}
                         sx={{
                             "& .MuiOutlinedInput-root": {
@@ -168,6 +185,7 @@ function AdminPanel() {
                         error={countError}
                         helperText={countError}
                         defaultValue={1}
+                        value={count}
                         inputProps={{max: 999999, min: 1}}
                         InputLabelProps={{className: "textfield__label"}}
                         sx={{
@@ -201,7 +219,8 @@ function AdminPanel() {
                         onChange={handlePriceChange}
                         error={priceError}
                         helperText={priceError}
-                        defaultValue={1}
+                        defaultValue={1.00}
+                        value={Number(price).toFixed(2)}
                         inputProps={{max: 9999999, min: 1}}
                         InputLabelProps={{className: "textfield__label"}}
                         sx={{
@@ -237,6 +256,7 @@ function AdminPanel() {
                         onChange={handleDescrChange}
                         error={descrError}
                         helperText={descrError}
+                        value={descr}
                         inputProps={{maxLength: 500}}
                         InputLabelProps={{className: "textfield__label"}}
                         sx={{
@@ -262,7 +282,7 @@ function AdminPanel() {
                     <FormControlLabel
                         id={"typeChecker"}
                         control={
-                            <Checkbox onChange={handleTypeChange} name="role"/>
+                            <Checkbox onChange={handleTypeChange} checked={type === 1} name="role"/>
                         }
                         label={<span style={{color: "white"}}>{typeLabel}</span>}
                     />
@@ -285,7 +305,7 @@ function AdminPanel() {
                         variant="contained"
                         sx={{mt: 3, mb: 2}}
                     >
-                        Добавить
+                        {params.id ? "Обновить" : "Добавить"}
                     </Button>
                 </Box>
             </Box>
